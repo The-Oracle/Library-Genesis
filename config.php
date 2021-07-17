@@ -4,27 +4,27 @@
 	$db = 'bookwarrior';
 	$dbtable = 'updated';
 	$dbtable_edited = 'updated_edited';
-        $descrtable = 'description';
-        $descrtable_edited = 'description_edited';
-        $topictable = 'topics';
+    $descrtable = 'description';
+    $descrtable_edited = 'description_edited';
+    $topictable = 'topics';
 
 	$dbuser = 'root';
-	$dbpass = '';
+	$dbpass = '1337Pwn3d';
 
 	$dbuser_get = 'root';
-	$dbpass_get = '';
+	$dbpass_get = '1337Pwn3d';
 
 
 	// problem resolution URL to mention in error messages
 	$errurl = '';
 
 	//$repository = 'repository';
-	$maxlines = 25;
+	$maxlines = 50;
 
 	//для RSS
 	$maxnewslines = 30;
 	$pagesperpage = 25;
-	$servername = 'libgen.io';
+	$servername = 'libgen.jbdynamics.net';
 	//$servername = trim(str_replace('http://', '', $_SERVER["HTTP_REFERER"]), '/');
     
         // separator symbol
@@ -34,13 +34,13 @@
 
         // distributed repository
  	 $repository = array(
-		       '0-390000' => 'K:\\!genesis\\!repository1',
-		  '391000-698000' => 'K:\\!genesis\\!repository2',
-		  '699000-786000' => 'K:\\!genesis\\!repository3',
-		  '787000-888000' => 'K:\\!genesis\\!repository5',
-		 '889000-1096000' => 'K:\\!genesis\\!repository6',
-		'1097000-1387000' => 'K:\\!genesis\\!repository7',
-		'1388000-1999000' => 'K:\\!genesis\\!repository8'
+		       '0-390000' => '/Volumes/TimeMachine/libgen',
+		  '391000-698000' => '/Volumes/TimeMachine/libgen',
+		  '699000-786000' => '/Volumes/TimeMachine/libgen',
+		  '787000-888000' => '/Volumes/TimeMachine/libgen',
+		 '889000-1096000' => '/Volumes/TimeMachine/libgen',
+		'1097000-1387000' => '/Volumes/TimeMachine/libgen',
+		'1388000-1999000' => '/Volumes/TimeMachine/libgen'
 
 );
 	$covers_repository = '/covers/';

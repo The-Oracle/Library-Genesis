@@ -18,15 +18,15 @@ class RSS
 
 	private function dbConnect()
 	{
-		@$con = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-		if (!$con) die("Could not connect to the database: ".mysql_error());
+		@$con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD);
+		if (!$con) die("Could not connect to the database: ".mysqli_error());
 
-		mysql_query("SET session character_set_server = 'UTF8'");
-		mysql_query("SET session character_set_connection = 'UTF8'");
-		mysql_query("SET session character_set_client = 'UTF8'");
-		mysql_query("SET session character_set_results = 'UTF8'");
+		mysqli_query($con, "SET session character_set_server = 'UTF8'");
+		mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+		mysqli_query($con, "SET session character_set_client = 'UTF8'");
+		mysqli_query($con, "SET session character_set_results = 'UTF8'");
 
-		mysql_select_db($db,$con);
+		mysqli_select_db($con, $db);
 		DEFINE ('LINK', $con);
 	}
 
@@ -38,11 +38,12 @@ class RSS
 		global $dbtable,$maxlines,$pagesperpage;
 
 		$sql_cnt = "SELECT COUNT(*) FROM $dbtable WHERE Filename!='' AND Generic='' AND Visible='';";
-		$result = mysql_db_query(DB_NAME,$sql_cnt,LINK);
+		mysqli_select_db(LINK, DB_NAME);
+		$result = mysqli_query(LINK ,$sql_cnt);
 		if (!$result) die($dberr);
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$count = stripslashes($row['COUNT(*)']);
-		mysql_free_result($result);
+		mysqli_free_result($result);
 
 		$pagestotal = ceil($count/$maxlines);
 		if ($pagestotal <= 1) $pagestotal = 1;
@@ -50,7 +51,7 @@ class RSS
 		$page = $_GET['page'];
 
 		$query = "SELECT * FROM $dbtable WHERE Filename!='' AND Generic='' AND Visible='' ORDER BY ID DESC LIMIT ".($page-1)*$maxlines.",$maxlines;";
-		$res = mysql_db_query (DB_NAME, $query, LINK);
+		$res = mysqli_query(LINK, $query);
 		$numlines = sizeof($res);
 
 		// items
@@ -65,7 +66,7 @@ class RSS
 	</paginator>
 ';
 
-		while($row = mysql_fetch_array($res))
+		while($row = mysqli_fetch_array($res))
 		{       $freebooksip = str_replace("\r\n", "", str_replace(' ', '', file_get_contents('../scimag/ip')));
 			$coverurl = stripslashes(trim($row['Coverurl']));
 

@@ -1,0 +1,30 @@
+41B79BEB28CF65EB817DA38FF85F5273	3540580816	Extrapolation and optimal decompositions	Milman M.
+044A50A28C773BF938B708B87AA4C3CB	3540410708	Geometric aspects of functional analysis. Israel seminar 1996-2000	Milman V., Schechtman G. (eds.)
+EC348950252DFECCF11744340CDDC3C3	3540720529	Geometric aspects of functional analysis: Israel seminar 2004-2005	Milman V., Schechtman G. (eds.)
+E9B95E8D3CAEAA1AE0FB3F6204A34764	0387167692,3540167692	Asymptotic theory of finite dimensional normed spaces	Milman V., Schechtman G.
+046B031BD9C3166BABB8009289CE0243	3540004858	Geometric aspects of functional analysis	Milman V.D., Schechtman G. (eds.)
+D9AE14169B30E759F588F395C8B4BE1C	3540223606	Geometric aspects of functional analysis. Israel seminar 2002--2003	Milman V.D., Schechtman G. (eds.)
+51FCE43C0A7C16E85AA25A964F6330B1	0824782550	Nonlinear Functional Analysis	Milojevic P.S. (ed.)
+78591A9B35CFA9FFD80FE2E7BC4F1678	0471372145	Functional Analysis: An Introduction to Banach Space Theory	Morrison T.J.
+E00533877EA981193761414822358995	3764382643	Spectral theory of linear operators and spectral systems in Banach algebras	Muller V.
+37EEBCA0EFB2B0DDDAAF2D637A7ECF5A	0387095225,3540095225	Duality for crossed products of von Neumann algebras	Nakagami Y., Takesaki M.
+5DEAD77AD68CD935DC92995EEB2D03F6	3540346708	Dynamical entropy in operator algebras	Neshveyev S., Stormer E.
+B75F8185DCDA8DC5FC099A1EAE269730	0387156631	Actions of discrete amenable groups on von Neumann algebras	Ocneanu A.
+B3A9DDCA029416EF539E16DC46881146	354054206X	Functional analysis: proc. Texas seminar	Odell E., Rosenthal H. (eds.)
+F5AEB4FAF03BC17216671AF161092D85	3540531971	Minimal projections in Banach spaces	Odyniec W., Lewicki G.
+ADAF8C79A86CCA65E86661ECAE1A99C2	0387133550,3540133550	Absolute summability of Fourier series and orthogonal series	Okuyama Y.
+671D241CE4BAA6E55823136F215E342C	0387905081,3540905081	Measure and category	Oxtoby J.C.
+5DD785AB146D8478B93ACC810B114377	0444502637	Handbook of measure theory	Pap E. (ed.)
+412B71AF4E75F5DF9200C1B7BC5744D8	3540506225	Spectra of random and almost-periodic operators	Pastur L., Figotin A.
+2D3EEBA02AB651DED30199B45CF56BA7	3540506225	Spectra of random and almost-periodic operators	Pastur L., Figotin A.
+E54F68D6ECD7D0180DD1EB1A24873B5F	0521816696	Completely Bounded Maps and Operator Algebras	Paulsen V.
+7E6315B37C48FCC30779397BF13751FA	0387967881,0387967885,3540967885	Analysis now	Pedersen G.
+83839C28D00AB389BCC6DCDE6CCA0165	0387967885	Analysis now	Pedersen G.K.
+D0251C94AFFF04ECBD38BDC97F51AF2D	0125494505	C-algebras and their automorphism groups	Pedersen G.K.
+AF15FBEF9F1F49328A5A01A04F094BAC	0444880569	Scattering Theory for Hyperbolic Operators	Petkov V.
+50A93BF0F09714D0F40A29D3452D81F2	3540071512	Hyperfunctions and theoretical physics	Pham F. (ed.)
+592496C17A72BB7176FFCB409A68966F	0387507353	Convex functions, monotone operators and differentiability	Phelps R.R.
+7AE2E9C5EAF3C0757D0BB84773126385	3540418342	Lectures on Choquet's theorem	Phelps R.R.
+3C848D41707A863B7987029BEB5E83AC	0817643672	History of Banach spaces and linear operators	Pietsch A.
+7EDC23BC6C940D1A02D9EE757A5005E5	3540122982	Banach space theory and its applications	Pietsch A., Popa N., Singer I. (eds.)
+BD2DC809B2FAB87658F8DC2CBA134385	3540415246	Similarity problems and completely bounded maps	Pisier G.

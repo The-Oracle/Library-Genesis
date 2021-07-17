@@ -3,7 +3,7 @@
 	include 'html.php';
 
 	// LOCK DB
-	mysql_query('LOCK TABLE '.$dbtable.', '.$descrtable.' WRITE');
+	mysqli_query($con, 'LOCK TABLE '.$dbtable.', '.$descrtable.' WRITE');
 
 	// compute into which folder the file should be dispatched
 	$id = mysql_next_id($dbtable);
@@ -78,10 +78,10 @@
 	    
         // check if there is a description for this book
         $tmpsql = "SELECT COUNT(*) FROM $descrtable WHERE md5='$_POST[MD5]'";
-        $result = mysql_query($tmpsql,$con);
+        $result = mysqli_query($con, $tmpsql);
 	    if (!$result) die($dberr);
         
-        $row = mysql_fetch_assoc($result);
+        $row = mysqli_fetch_assoc($result);
         if($row["COUNT(*)"] != 0 ) {
           $sql2="UPDATE $descrtable SET `descr`='$descr' WHERE `MD5`='$_POST[MD5]' LIMIT 1";  
         } else {
@@ -89,11 +89,11 @@
         }
     }
 
-	if (!mysql_query($sql1,$con))
-		die('Error: ' . mysql_error());
+	if (!mysqli_query($con, $sql1))
+		die('Error: ' . mysqli_error());
 
-	if (!mysql_query($sql2,$con))
-		die('Error: ' . mysql_error() . '<br>Clean up the main table!');
+	if (!mysqli_query($con, $sql2))
+		die('Error: ' . mysqli_error() . '<br>Clean up the main table!');
 
 	if (!$_POST['Edit']){
 		$savedir = "{$repository}/{$savedir}";
@@ -110,15 +110,15 @@
 		@unlink($file);
 
 		$sql="UPDATE $dbtable SET `Filename`='$relPath' WHERE `ID`='$id' LIMIT 1";
-		if (!mysql_query($sql,$con))
-			die('Error: ' . mysql_error());
+		if (!mysqli_query($con, $sql))
+			die('Error: ' . mysqli_error());
 	}
 
-	mysql_query('UNLOCK TABLES');
+	mysqli_query($con, 'UNLOCK TABLES');
 	// UNLOCK DB
 
 	echo $htmlhead."<font color='#A00000'><h1>Registration complete!</h1></font>Write down the uploaded book MD5:<br><font face='courier new'><b>$_POST[MD5]</b></font><p><h2>Thank you!</h2><a href=registration.php>Go back to the upload page</a>".$htmlfoot;
-	mysql_close($con);
+	mysqli_close($con);
 
 // removes unnecessary whitespace and tab characters
 function clean($var){
@@ -129,8 +129,8 @@ function clean($var){
 }
 
 function mysql_next_id($dbtable) {
-	$result = mysql_query("SHOW TABLE STATUS WHERE name='".$dbtable."'");
-	$rows = mysql_fetch_assoc($result);
+	$result = mysqli_query($con, "SHOW TABLE STATUS WHERE name='".$dbtable."'");
+	$rows = mysqli_fetch_assoc($result);
 	return $rows['Auto_increment'];
 }
 ?>

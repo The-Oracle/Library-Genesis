@@ -8,11 +8,12 @@ header("HTTP/1.0 500 Internal Server Error");
 //ini_set('display_errors', '1');
 if (isset($_SERVER["HTTP_REFERER"])) {
 	if (strpos($_SERVER["HTTP_REFERER"], "http://adf.ly") !== false || 
-strpos($_SERVER["HTTP_REFERER"], "http://ebookoid.in") !== false || 
-strpos($_SERVER["HTTP_REFERER"], "http://bookos.org") !== false || 
-strpos($_SERVER["HTTP_REFERER"], "http://bookinist.net") !== false || 
-strpos($_SERVER["HTTP_REFERER"], "http://ebooks.myesci.com") !== false || 
-strpos($_SERVER["HTTP_REFERER"], "http://anonym.to") !== false)
+		strpos($_SERVER["HTTP_REFERER"], "http://ebookoid.in") !== false || 
+		strpos($_SERVER["HTTP_REFERER"], "http://bookos.org") !== false || 
+		strpos($_SERVER["HTTP_REFERER"], "http://bookinist.net") !== false || 
+		strpos($_SERVER["HTTP_REFERER"], "http://ebooks.myesci.com") !== false || 
+		strpos($_SERVER["HTTP_REFERER"], "http://anonym.to") !== false ||
+		strpos($_SERVER["HTTP_REFERER"], "http://libgen.jbdynamics.net") !== false)
 	{
 		// play the fool
 		header("HTTP/1.0 200 OK");
@@ -43,23 +44,23 @@ $htmlhead="<html><head></head><body>";
 $htmlfoot="</body></html>";
 
 
-	@$con = mysql_connect($dbhost,$dbuser_get,$dbpass_get);
+	$con = mysqli_connect($dbhost,$dbuser_get,$dbpass_get);
 	if (!$con)
 	{
 		header("HTTP/1.0 500 Internal Server Error");
-		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not connect to the database: ".mysql_error()."<br>Cannot proceed.<p><a href='http://genofond.org/viewtopic.php?f=3&t=3925'>Please, report on the error</a>.".$htmlfoot);
+		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not connect to the database: ".mysqli_error()."<br>Cannot proceed.<p><a href='http://genofond.org/viewtopic.php?f=3&t=3925'>Please, report on the error</a>.".$htmlfoot);
 	}
 
-	mysql_query("SET session character_set_server = 'UTF8'");
-	mysql_query("SET session character_set_connection = 'UTF8'");
-	mysql_query("SET session character_set_client = 'UTF8'");
-	mysql_query("SET session character_set_results = 'UTF8'");
+	mysqli_query($con, "SET session character_set_server = 'UTF8'");
+	mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+	mysqli_query($con, "SET session character_set_client = 'UTF8'");
+	mysqli_query($con, "SET session character_set_results = 'UTF8'");
 
-	$result = mysql_select_db($db,$con);
+	$result = mysqli_select_db($con, $db);
 	if (!$result)
 	{
 		header("HTTP/1.0 500 Internal Server Error");
-		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could select database: ".mysql_error(). "<br>Cannot proceed.".$htmlfoot);
+		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could select database: ".mysqli_error(). "<br>Cannot proceed.".$htmlfoot);
 	}
 	
 
@@ -122,19 +123,19 @@ WHEN u.`Visible`='del'
 THEN 'del'
 ELSE 
 CONCAT(u.`ID` - (u.`ID` % 1000), '/', u.`MD5`) 
-END as `Filename`, u.Extension FROM `".$dbtable."` as `u` WHERE `u`.`MD5`='" . mysql_real_escape_string($_GET['md5']) . "'";
+END as `Filename`, u.Extension FROM `".$dbtable."` as `u` WHERE `u`.`MD5`='" . mysqli_real_escape_string($con, $_GET['md5']) . "'";
 
 //echo $sql;
-	$result = mysql_query($sql, $con);
+	$result = mysqli_query($con, $sql);
 	if (!$result)
 	{
 		header("HTTP/1.0 500 Internal Server Error");
-		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not query database: ".mysql_error(). "<br>Cannot proceed.".$htmlfoot);
+		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not query database: ".mysqli_error(). "<br>Cannot proceed.".$htmlfoot);
 	}
 		//die($htmlhead."<font color='#A00000'><h1>Error</h1></font>" . mysql_error() . "<br>Cannot proceed.<p>Please, report on the error from <a href=>the main page</a>.".$htmlfoot);
-	if(mysql_num_rows($result) ==1)
+	if (mysqli_num_rows($result) == 1)
 	{
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 
 		if($row['Filename'] == 'del')
 		{
@@ -160,8 +161,8 @@ END as `Filename`, u.Extension FROM `".$dbtable."` as `u` WHERE `u`.`MD5`='" . m
 
 
 
-	mysql_free_result($result);
-	mysql_close($con);
+	mysqli_free_result($result);
+	mysqli_close($con);
 
 
 
@@ -216,33 +217,33 @@ return($downloadname);
 
 //функция получения пути до файла 
 
-    function getRepDirByFilename($filename) 
-	{
-        global $repository;
-        global $filesep;
-        
-      	list($dir,$file) = explode($filesep,$filename); //print "$dir $file<br>\n";
-        
+function getRepDirByFilename($filename) 
+{
+    global $repository;
+    global $filesep;
+    
+  	list($dir,$file) = explode($filesep,$filename); //print "$dir $file<br>\n";
+    
 
-        $repdir = $repository;
-        foreach  ($repository as $key => $value) 
-	    {
-            if(!isset($key) or $key=='') 
-	    {
-              // $key can't be not set, but it can be empty, in which case we skip it - it's the default value
-              continue;
-            }
-            
-            list ($start,$end)=explode('-',$key);
-            if ($dir>=$start and $dir<=$end) 
-	    {
-                $repdir=$value; 
-                break;
-            }
+    $repdir = $repository;
+    foreach  ($repository as $key => $value) 
+    {
+        if(!isset($key) or $key=='') 
+    {
+          // $key can't be not set, but it can be empty, in which case we skip it - it's the default value
+          continue;
         }
         
-        return $repdir;
-    } 
+        list ($start,$end)=explode('-',$key);
+        if ($dir>=$start and $dir<=$end) 
+    {
+            $repdir=$value; 
+            break;
+        }
+    }
+    
+    return $repdir;
+} 
 
 //удаляем недопустимые символы
 function removeillegal($str)
@@ -258,12 +259,7 @@ function translit($str)
 }
 
 
-$fullfilename = getRepDirByFilename($row['Filename']) . '\\' . $row['Filename']; // eg c:/library/9000/<md5>
-$fullfilename = str_replace('/', '\\', $fullfilename);
-#$fullfilename = str_replace(':\\', ':\\\\', $fullfilename);
-//echo '/internal/'.$fullfilename;
-
-#echo "X-Accel-Redirect: /internal/$fullfilename";
+$fullfilename = getRepDirByFilename($row['Filename']) . '/' . $row['Filename']; // eg c:/library/9000/<md5>
 
 if (!file_exists($fullfilename))
 {
@@ -273,47 +269,57 @@ if (!file_exists($fullfilename))
 
 $downloadname = removeillegal(downloadname($row));
 $ext = $row['Extension'];
-//echo $open;
-
-
 
 
 if($open == 0)
 {
-
-	if (isset($_SERVER['SERVER_SOFTWARE'])&&substr($_SERVER['SERVER_SOFTWARE'],0,5)=='nginx') 
-	{
-//echo $open;
-		header('Content-type: application/octet-stream');
+	if (file_exists($fullfilename)) {
+	    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+	    header("Cache-Control: public"); // needed for internet explorer
+	    header("Content-Type: application/octet-stream");
+	    header("Content-Transfer-Encoding: Binary");
+	    header("Content-Length:".filesize($fullfilename));
 		header('Content-Disposition: attachment; filename="' . $downloadname . '.' . $ext . '"');      
-		header('X-Accel-Redirect: /internal/'.$fullfilename);
-	} 
+		readfile($fullfilename);
+	}
 }
 elseif($open == 1)
 {
 
-	if (isset($_SERVER['SERVER_SOFTWARE'])&&substr($_SERVER['SERVER_SOFTWARE'],0,5)=='nginx') 
-	{
-
+	if (file_exists($fullfilename)) {
+	    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+	    header("Cache-Control: public"); // needed for internet explorer
+	    header("Content-Type: application/octet-stream");
+	    header("Content-Transfer-Encoding: Binary");
+	    header("Content-Length:".filesize($fullfilename));
 		header('Content-type: application/octet-stream');
 		header('Content-Disposition: attachment; filename="' . translit($downloadname) . '.' . $ext . '"');      
-		header("X-Accel-Redirect: /internal/$fullfilename");
+		readfile($fullfilename);
 	} 
 }
 elseif($open == 2)
 {
-	if (isset($_SERVER['SERVER_SOFTWARE'])&&substr($_SERVER['SERVER_SOFTWARE'],0,5)=='nginx') 
-	{
-
+	if (file_exists($fullfilename)) {
+	    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+	    header("Cache-Control: public"); // needed for internet explorer
+	    header("Content-Type: application/octet-stream");
+	    header("Content-Transfer-Encoding: Binary");
+	    header("Content-Length:".filesize($fullfilename));
 		header('Content-type: application/octet-stream');
 		header('Content-Disposition: attachment; filename="' . $md5 . '.' . $ext . '"');    
-		header("X-Accel-Redirect: /internal/$fullfilename");
+		readfile($fullfilename);
 	} 
 }
 elseif($open == 3)
 {
-		header("HTTP/1.0 200 OK");	
+	if (file_exists($fullfilename)) {
+	    header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+	    header("Cache-Control: public"); // needed for internet explorer
+	    header("Content-Type: application/octet-stream");
+	    header("Content-Transfer-Encoding: Binary");
+	    header("Content-Length:".filesize($fullfilename));
 		header('Content-type: application/'.$ext);
 		readfile($fullfilename); //открыть в браузере
+	}
 }
 ?>

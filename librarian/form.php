@@ -8,10 +8,10 @@
 	$volinfo = '';
 	$year = '';
 	$publisher = '';
-        $city = '';
+    $city = '';
 	$edition = '';
-        $series = '';
-        $periodical = '';
+    $series = '';
+    $periodical = '';
 	$pages = '';
 	$identifier = '';
 	$language = '';
@@ -26,7 +26,10 @@
 	$udc = '';
 	$lbc = '';
 	$bookcode = '';
-    
+    $amazonError = '';
+	$ozonError = '';
+	$rgbError = '';
+	error_reporting(E_ERROR | E_PARSE);
 	// form 1 or 2 submitted?
 	if ($_POST['Form'] == 1) //new record
 	{
@@ -64,14 +67,14 @@
 	$sql="SELECT DISTINCT $db.$dbtable.*, $db.$descrtable.descr 
           FROM $db.$dbtable LEFT JOIN $db.$descrtable ON $db.$dbtable.md5 = $db.$descrtable.md5
           WHERE $db.$dbtable.MD5='$md5'";
-	$result = mysql_query($sql,$con);
+	$result = mysqli_query($con, $sql);
 	if (!$result)
 	{
-		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysql_error()."<br>Cannot proceed.<p>Please, report the error from <a href=>the main page</a>.".$htmlfoot);
+		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysqli_error()."<br>Cannot proceed.<p>Please, report the error from <a href=>the main page</a>.".$htmlfoot);
 	}
 
-	$rows = mysql_fetch_assoc($result);
-	mysql_close($con);
+	$rows = mysqli_fetch_assoc($result);
+	mysqli_close($con);
 
 	// if book found
 	if (strlen($rows['MD5']) == 32){

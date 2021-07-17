@@ -198,7 +198,7 @@ elseif ($mode == 'newer')
 }
 elseif(isset($doi))
 {
-	$where = "`Doi` = '".mysql_real_escape_string($doi)."'";
+	$where = "`Doi` = '".mysqli_real_escape_string($con, $doi)."'";
 	$orderby = " ORDER BY `TimeLastModified`, `ID` ";
 }
 elseif(isset($isbn))
@@ -229,13 +229,13 @@ $return_arr = array();
 $sql = "SELECT ".$fields." FROM `updated` WHERE ".$where." ".$orderby." ".$limit;
 //echo $sql;
 
-mysql_query("SET time_zone='+00:00'",$con); 
-$fetch = mysql_query($sql, $con);
+mysqli_query($con, "SET time_zone='+00:00'"); 
+$fetch = mysqli_query($con, $sql);
 if (!$fetch)
 {
 	die('SQL ERROR');
 }
-while ($row = mysql_fetch_assoc($fetch)) 
+while ($row = mysqli_fetch_assoc($fetch)) 
 {
 	array_push($return_arr,$row);
 }

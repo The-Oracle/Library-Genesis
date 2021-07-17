@@ -2,15 +2,15 @@
 
 	include '../config.php';
 
-	@$con = mysql_connect($dbhost,$dbuser,$dbpass);
+	@$con = mysqli_connect($dbhost,$dbuser,$dbpass);
 	if (!$con)
-		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not connect to the database: ".mysql_error()."<br>Cannot proceed.<p>Please, report on the error from <a href=>the main page</a>.".$htmlfoot);
+		die($htmlhead."<font color='#A00000'><h1>Error</h1></font>Could not connect to the database: ".mysqli_error()."<br>Cannot proceed.<p>Please, report on the error from <a href=>the main page</a>.".$htmlfoot);
 
-	mysql_query("SET session character_set_server = 'UTF8'");
-	mysql_query("SET session character_set_connection = 'UTF8'");
-	mysql_query("SET session character_set_client = 'UTF8'");
-	mysql_query("SET session character_set_results = 'UTF8'");
-	mysql_select_db($db,$con);
+	mysqli_query($con, "SET session character_set_server = 'UTF8'");
+	mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+	mysqli_query($con, "SET session character_set_client = 'UTF8'");
+	mysqli_query($con, "SET session character_set_results = 'UTF8'");
+	mysqli_select_db($con, $db);
 
 	DEFINE ('LINK', $con);
 	DEFINE ('DB_USER', $dbuser);
@@ -58,19 +58,19 @@ class RSS
 
 		if(isset($_GET['language']))
 		{
-			$where .= " `language` = '".mysql_real_escape_string($_GET['language'])."'  AND  ";
+			$where .= " `language` = '".mysqli_real_escape_string($_GET['language'])."'  AND  ";
 		}
 
 
 		$sql_cnt = "SELECT COUNT(*) FROM ".$dbtable." WHERE 1=1 AND ".$where." `Visible`='' ";
 //echo $sql_cnt;
-		$result = mysql_query($sql_cnt,LINK);
+		$result = mysqli_query(LINK, $sql_cnt);
 		if (!$result) die('');
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$count = stripslashes($row['COUNT(*)']);
 
 
-		mysql_free_result($result);
+		mysqli_free_result($result);
 
 		$pagestotal = ceil($count/$maxnewslines);
 		if ($pagestotal <= 1) $pagestotal = 1;
@@ -80,7 +80,7 @@ class RSS
 
 		$query = "SELECT * FROM $dbtable WHERE 1=1 AND ".$where." Visible='' ORDER BY `ID` DESC LIMIT ".($page-1)*$maxnewslines.",$maxnewslines;";
 		//echo $query;
-		$res = mysql_query ($query, LINK);
+		$res = mysqli_query (LINK, $query);
 		$numlines = sizeof($res);
 
 		if (false === strpos(strtolower($_SERVER['HTTP_USER_AGENT']),'google')){
@@ -101,7 +101,7 @@ class RSS
 
 ';
 
-		while($row = mysql_fetch_array($res))
+		while($row = mysqli_fetch_array($res))
 		{
 
 

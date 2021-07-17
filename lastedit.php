@@ -82,7 +82,7 @@ if (is_array($column)) {
 
 
 	// now look up in the database
-	$dberr = $htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysql_error()."<br>Cannot proceed.<p>Please, <a href='{$errurl}'><u>report</u></a> on this error.".$htmlfoot;
+	$dberr = $htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysqli_error()."<br>Cannot proceed.<p>Please, <a href='{$errurl}'><u>report</u></a> on this error.".$htmlfoot;
 
 	if (isset($_GET['lines'])) $lines = $_GET['lines'];
 	else $lines = $maxlines;
@@ -103,17 +103,17 @@ if (is_array($column)) {
 
 //echo $sql_req;
 
-	$result = mysql_query($sql_cnt,$con);
+	$result = mysqli_query($con, $sql_cnt);
 	if (!$result) die($dberr);
 
-	$row = mysql_fetch_assoc($result);
+	$row = mysqli_fetch_assoc($result);
 	$totalrows = stripslashes($row['COUNT(*)']);
 	$totalsize = stripslashes($row['SUM(Filesize)']);
 
 
-	mysql_free_result($result);
+	mysqli_free_result($result);
 
-	$result = mysql_query($sql_req,$con);
+	$result = mysqli_query($con, $sql_req);
 	if (!$result) die($dberr);
 
 	///////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ echo "<table width=100%><tr><td>$form</td><td><a href='/'><font color=#A00000 va
 	//$repository = str_replace('\\','/',realpath($repository));
 
 	$i = 1;
-	while ($row = mysql_fetch_assoc($result)){
+	while ($row = mysqli_fetch_assoc($result)){
 		$id = stripslashes($row['ID']);
 		$title = stripslashes($row['Title']);
 		$author = stripslashes($row['Author']);
@@ -335,6 +335,6 @@ echo "<table width=100%><tr><td>$form</td><td><a href='/'><font color=#A00000 va
 	echo $footer;
 	echo $htmlfoot;
 
-	mysql_free_result($result);
-	mysql_close($con);
+	mysqli_free_result($result);
+	mysqli_close($con);
 ?>

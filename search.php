@@ -720,7 +720,7 @@ if ($mainpage)
 	die;
 }
 $errurl = 'https://genofond.org/viewtopic.php?f=17&t=6423';
-if(isset($_GET)) {$dberr  = $htmlhead . "<font color='#A00000'><h1>Error</h1></font>" . mysql_error() . "<br>Cannot proceed.<p>Please, <a href='{$errurl}'><u>report</u></a> on this error." . $htmlfoot;}
+if(isset($_GET)) {$dberr  = $htmlhead . "<font color='#A00000'><h1>Error</h1></font>" . mysqli_error($con) . "<br>Cannot proceed.<p>Please, <a href='{$errurl}'><u>report</u></a> on this error." . $htmlfoot;}
 
 if (isset($_GET['sort']) && in_array($_GET['sort'], array(
 	"title",
@@ -801,8 +801,8 @@ elseif ($mode == 'last')
 	}
 	else
 	{
-		$rescount = mysql_query("SHOW TABLE STATUS WHERE `name`='" . $dbtable . "'", $con);
-		$rowcount = mysql_fetch_assoc($rescount);
+		$rescount = mysqli_query($con, "SHOW TABLE STATUS WHERE `name`='" . $dbtable . "'");
+		$rowcount = mysqli_fetch_assoc($rescount);
 		$where .= " AND `ID` BETWEEN ". ($rowcount['Rows'] - ($page - 1) * $res_on_page - $res_on_page ). " AND " .($rowcount['Rows'] - ($page - 1) * $res_on_page );
 		$sql_req = "SELECT *, '' as `SHA1`, '' as `AICH`, '' as `TTH`, '' as `eDonkey`, '' as `CRC32`  FROM `".$dbtable."` WHERE " . $where . " ORDER BY `ID` DESC";
 	}
@@ -817,8 +817,8 @@ elseif ($mode == 'modified')
 	}
 	else
 	{
-		$rescount = mysql_query("SHOW TABLE STATUS WHERE `name`='" . $dbtable . "'", $con);
-		$rowcount = mysql_fetch_assoc($rescount);
+		$rescount = mysqli_query($con, "SHOW TABLE STATUS WHERE `name`='" . $dbtable . "'");
+		$rowcount = mysqli_fetch_assoc($rescount);
 	}
 
 	if((($page - 1) * $res_on_page) < 50000)
@@ -828,14 +828,14 @@ elseif ($mode == 'modified')
 	}
 }
 //echo $sql_req."<br><br>";
-$result = mysql_query($sql_req, $con);
+$result = mysqli_query($con, $sql_req);
 if (!$result)
 	die($dberr);
 
 if($mode =='search')
 {
-	$rescount = mysql_query("SELECT FOUND_ROWS()", $con);
-	$cn       = mysql_result($rescount, 0);
+	$rescount = mysqli_query($con, "SELECT FOUND_ROWS()");
+	$cn       = mysqli_result($rescount, 0);
 }
 elseif($mode == 'last')
 {
@@ -846,8 +846,8 @@ elseif($mode == 'last')
 	}
 	else
 	{
-		$rescount = mysql_query("SELECT FOUND_ROWS()", $con);
-		$cn       = mysql_result($rescount, 0);	
+		$rescount = mysqli_query($con, "SELECT FOUND_ROWS()");
+		$cn       = mysqli_result($rescount, 0);	
 		if($cn > 50000) 
 		{
 			$rowcount['Rows'] = $cn;
@@ -857,8 +857,8 @@ elseif($mode == 'last')
 }
 elseif($mode == 'modified')
 {
-		$rescount = mysql_query("SELECT FOUND_ROWS()", $con);
-		$cn       = mysql_result($rescount, 0);	
+		$rescount = mysqli_query($con, "SELECT FOUND_ROWS()");
+		$cn       = mysqli_result($rescount, 0);	
 		if($cn > 50000) 
 		{
 			$rowcount['Rows'] = $cn;
@@ -1018,7 +1018,7 @@ elseif($mode == 'last' || $mode == 'modified')
 }
 echo $reshead;
 echo $tabheader;
-while ($row = mysql_fetch_assoc($result))
+while ($row = mysqli_fetch_assoc($result))
 {
 	include 'mirrors.php';
 	//if ($i >= (($page - 1) * $maxlines) and ($i < $page * $maxlines))
@@ -1347,7 +1347,7 @@ if ($page < $pages && $pages > 1)
 }
 echo "</td><td align='right' width=45%></td></tr></table>";
 echo $htmlfoot;
-mysql_free_result($result);
-mysql_close($con);
+mysqli_free_result($result);
+mysqli_close($con);
 
 ?>

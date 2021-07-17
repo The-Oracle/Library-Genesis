@@ -29,13 +29,13 @@ class RSS
 		include 'html.php';
                 include_once '../lang_'.$lang.'.php';
 
- 		@$con = mysql_connect($dbhost, $dbuser, $dbpass);
-		if (!$con) die("Could not connect to the database: ".mysql_error());
-		mysql_query("SET session character_set_server = 'UTF8'");
-		mysql_query("SET session character_set_connection = 'UTF8'");
-		mysql_query("SET session character_set_client = 'UTF8'");
-		mysql_query("SET session character_set_results = 'UTF8'");
-		mysql_select_db('bookwarrior', $con);
+ 		@$con = mysqli_connect($dbhost, $dbuser, $dbpass);
+		if (!$con) die("Could not connect to the database: ".mysqli_error());
+		mysqli_query($con, "SET session character_set_server = 'UTF8'");
+		mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+		mysqli_query($con, "SET session character_set_client = 'UTF8'");
+		mysqli_query($con, "SET session character_set_results = 'UTF8'");
+		mysqli_select_db($con, 'bookwarrior');
 		DEFINE ('LINK', $con);
 
 		global $dbtable_edited,$maxlines,$pagesperpage,$descrtable_edited;
@@ -48,15 +48,15 @@ class RSS
 
 		// now look up in the database
 		$sql = "SELECT * FROM $dbtable_edited WHERE MD5='$md5' AND TimeLastModified = '$tlm'";
-		$result = mysql_query($sql,LINK);
+		$result = mysqli_query(LINK, $sql);
 		if (!$result){
-			die($htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysql_error()."<br>Cannot proceed.<p>Please, report the error from <a href=>the main page</a>.".$htmlfoot);
+			die($htmlhead."<font color='#A00000'><h1>Error</h1></font>".mysqli_error()."<br>Cannot proceed.<p>Please, report the error from <a href=>the main page</a>.".$htmlfoot);
 		}
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 
 		$sql1 = "SELECT * FROM $descrtable_edited WHERE MD5='$md5' AND  TimeLastModified = '$tlm'";
-		$result1 = mysql_query($sql1,LINK);
-		$row1 = mysql_fetch_assoc($result1);
+		$result1 = mysqli_query(LINK, $sql1);
+		$row1 = mysqli_fetch_assoc($result1);
 
 //$sql2 = "SELECT MD5 FROM $dbtable WHERE MATCH(Generic) AGAINST ('$md5' IN BOOLEAN MODE)";
 //$result2 = mysql_query($sql2,LINK);
@@ -157,7 +157,7 @@ if ($orientation == '0'){$orientation='portrait';
 }elseif ($orientation == '1'){$orientation='landscape';
 }else{$orientation=' ';}
 
-$descr = mysql_real_escape_string(htmlspecialchars(strip_tags(trim($row1['descr']))));
+$descr = mysqli_real_escape_string(htmlspecialchars(strip_tags(trim($row1['descr']))));
 $descr = str_replace("\\r\\n", "\\n", $descr);
 $descr = str_replace("\\n", "<br />", $descr);
 

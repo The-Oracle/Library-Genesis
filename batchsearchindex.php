@@ -241,8 +241,8 @@ else
 				                                  
 			}
 			$sql = "SELECT COUNT(*) FROM `updated` WHERE MATCH(`title`,`author`,`series`,`publisher`,`year`,`periodical`,`volumeinfo`) AGAINST ('» ".implode(' ', $matchparts)."»' IN BOOLEAN MODE)  AND `visible` ='' AND `filename` != '' LIMIT 20";
-			$result = mysql_query($sql,$con);
-			$row = mysql_fetch_assoc($result);
+			$result = mysqli_query($con, $sql);
+			$row = mysqli_fetch_assoc($result);
 			$totalrows = stripslashes($row['COUNT(*)']);
 			unset($matchparts);
 			$getparameters = '&column=def'; 
@@ -256,8 +256,8 @@ else
 				//echo $sql;
 
 			
-				$result = mysql_query($sql,$con);
-				$row = mysql_fetch_assoc($result);
+				$result = mysqli_query($con, $sql);
+				$row = mysqli_fetch_assoc($result);
 				$totalrows = stripslashes($row['COUNT(*)']);
 /*
 				if ($totalrows == 0)
@@ -274,8 +274,8 @@ else
 		elseif(!$isbn && ($md5hash && preg_match('|^[0-9A-Fa-f]{32}$|', $a2[0])))
 		{
 			$sql = "SELECT COUNT(*) FROM updated WHERE `MD5`='".$a2[0]."' ";
-			$result = mysql_query($sql,$con);
-			$row = mysql_fetch_assoc($result);
+			$result = mysqli_query($con, $sql);
+			$row = mysqli_fetch_assoc($result);
 			$totalrows = stripslashes($row['COUNT(*)']);
 			$getparameters = '&column[]=md5';
 		}
@@ -285,6 +285,6 @@ else
 	}
 }
 echo $htmlfoot;
-mysql_close($con);
+mysqli_close($con);
 ?>
 

@@ -20,23 +20,23 @@ else
 }
 
 
-$con = mysql_connect($dbhost, $dbuser, $dbpass);
-		mysql_query("SET session character_set_server = 'UTF8'");
-		mysql_query("SET session character_set_connection = 'UTF8'");
-		mysql_query("SET session character_set_client = 'UTF8'");
-		mysql_query("SET session character_set_results = 'UTF8'");
-mysql_select_db($db, $con);
+$con = mysqli_connect($dbhost, $dbuser, $dbpass);
+		mysqli_query($con, "SET session character_set_server = 'UTF8'");
+		mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+		mysqli_query($con, "SET session character_set_client = 'UTF8'");
+		mysqli_query($con, "SET session character_set_results = 'UTF8'");
+		mysqli_select_db($con, $db);
 //$md5  = '8b6071fec36f937aa2d042072f0500b4';
 
 
 $sqlbibtex = "SELECT * FROM `".$dbtable."` WHERE `MD5`='$md5'";
-$resultbibtex = mysql_query($sqlbibtex,$con);
-if (!$resultbibtex || mysql_num_rows($resultbibtex) == 0)
+$resultbibtex = mysqli_query($con, $sqlbibtex);
+if (!$resultbibtex || mysqli_num_rows($resultbibtex) == 0)
 {
-	die($htmlhead."Error " . mysql_error() . "Cannot proceed or MD5 not found in DB".$htmlfoot);
+	die($htmlhead."Error " . mysqli_error() . "Cannot proceed or MD5 not found in DB".$htmlfoot);
 }
 
-$rowbibtex = mysql_fetch_assoc($resultbibtex);
+$rowbibtex = mysqli_fetch_assoc($resultbibtex);
 
 
 $title = $rowbibtex['Title'];

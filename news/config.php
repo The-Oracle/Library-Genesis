@@ -1,18 +1,18 @@
 <?php
 
-         $freebooksip = str_replace("\r\n", "", str_replace(' ', '', file_get_contents('../scimag/ip')));
+    $freebooksip = str_replace("\r\n", "", str_replace(' ', '', file_get_contents('../scimag/ip')));
 	// mysql params
 	$dbhost = 'localhost';
 	$db = 'bookwarrior';
 	$dbtable = 'updated';
 	$dbuser = 'root';
-	$dbpass = '';
+	$dbpass = '1337Pwn3d';
 
 	$maxlines = 10;
 	$pagesperpage = 25;
 
 	//$servername = 'gen.lib.rus.ec';
-	$servername = libgen.org;
+	$servername = 'libgen.jbdynamics.net';
 
 	// separator symbol
 	$filesep = '/';

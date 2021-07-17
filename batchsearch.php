@@ -5,14 +5,14 @@ $dbName='scimag';
 $dbuser='root';
 $dbpass='';
 $db="bookwarrior";   
-	@$con = mysql_connect($dbhost,$dbuser,$dbpass);
+	@$con = mysqli_connect($dbhost,$dbuser,$dbpass);
 	if (!$con)
-		die($htmlhead."Could not connect to the database: ".mysql_error());
-	mysql_query("SET session character_set_server = 'UTF8'");
-	mysql_query("SET session character_set_connection = 'UTF8'");
-	mysql_query("SET session character_set_client = 'UTF8'");
-	mysql_query("SET session character_set_results = 'UTF8'");
-	mysql_select_db($db,$con);
+		die($htmlhead."Could not connect to the database: ".mysqli_error());
+	mysqli_query($con, "SET session character_set_server = 'UTF8'");
+	mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+	mysqli_query($con, "SET session character_set_client = 'UTF8'");
+	mysqli_query($con, "SET session character_set_results = 'UTF8'");
+	mysqli_select_db($con, $db);
 
 
 
@@ -154,8 +154,8 @@ foreach ($a2 as $a3){
 
 if(!$isbn){
 $sql = "SELECT COUNT(*) FROM updated WHERE ($sql)";
-$result = mysql_query($sql,$con);
-$row = mysql_fetch_assoc($result);
+$result = mysqli_query($con, $sql);
+$row = mysqli_fetch_assoc($result);
 $totalrows = stripslashes($row['COUNT(*)']);
 
 
@@ -164,8 +164,8 @@ $totalrows = stripslashes($row['COUNT(*)']);
 }
 else{
 $sql = "SELECT COUNT(*) FROM updated WHERE MATCH(`identifier`) AGAINST('$a3*' IN BOOLEAN MODE)";
-$result = mysql_query($sql,$con);
-$row = mysql_fetch_assoc($result);
+$result = mysqli_query($con, $sql);
+$row = mysqli_fetch_assoc($result);
 $totalrows = stripslashes($row['COUNT(*)']);
 //if ($totalrows == 0){
 //$sql = "SELECT COUNT(*) FROM updated WHERE replace(identifier, '-', '') like '$a3%'";
@@ -197,5 +197,5 @@ echo "<tr><td width=500>$a9</td><td width=460><a href='../search?req=$a7&nametyp
 }
 
 
-mysql_close($con);
+mysqli_close($con);
 ?>

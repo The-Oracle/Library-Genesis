@@ -95,14 +95,14 @@ include_once '../lang_' . $lang . '.php';
 
 
 //соед.  с БД
-@$con = mysql_connect($dbhost, $dbuser, $dbpass);
+$con = mysqli_connect($dbhost, $dbuser, $dbpass);
 if (!$con)
-	die($htmlhead."Could not connect to the database: " . mysql_error().$htmlfoot);
-mysql_query("SET session character_set_server = 'UTF8'");
-mysql_query("SET session character_set_connection = 'UTF8'");
-mysql_query("SET session character_set_client = 'UTF8'");
-mysql_query("SET session character_set_results = 'UTF8'");
-mysql_select_db($db, $con);
+	die($htmlhead."Could not connect to the database: " . mysqli_error().$htmlfoot);
+mysqli_query($con, "SET session character_set_server = 'UTF8'");
+mysqli_query($con, "SET session character_set_connection = 'UTF8'");
+mysqli_query($con, "SET session character_set_client = 'UTF8'");
+mysqli_query($con, "SET session character_set_results = 'UTF8'");
+mysqli_select_db($con, $db);
 
 
 //проверяем получаемые параметры
@@ -183,7 +183,7 @@ else
 	LEFT JOIN (SELECT  GROUP_CONCAT(`md5` separator '|')              as `generic_md5` from `".$dbtable."`        as `g` WHERE `g`.`generic` = '".$md5."' ) as `g`   ON 1=1
 	WHERE `u`.`MD5` = '".$md5."' AND u.`TimeLastModified` = '".$tlm."' AND d.`TimeLastModified` = '".$tlm."' LIMIT 1";
 	//echo $sql;
-	if (mysql_num_rows(mysql_query($sql, $con)) == 0)
+	if (mysqli_num_rows(mysqli_query($con, $sql)) == 0)
 	{
 //echo 22222;
 		//2) когда треб дата есть и в updated_edited может быть или не быть в descr_edited
@@ -193,7 +193,7 @@ else
 		LEFT JOIN (SELECT  GROUP_CONCAT(`md5` separator '|')              as `generic_md5` from `".$dbtable."`        as `g` WHERE `g`.`generic` = '".$md5."' ) as `g`   ON 1=1
 		WHERE `u`.`MD5` = '".$md5."' AND u.`TimeLastModified` = '".$tlm."' ORDER BY `d`.`descr` DESC LIMIT 1";
 		//echo $sql;
-		if (mysql_num_rows(mysql_query($sql, $con)) == 0)
+		if (mysqli_num_rows(mysqli_query($con, $sql)) == 0)
 		{
 //echo 33333;
 			//3) когда треб дата есть  в descr_edited, и ее нет в updated_edited, тогда берем из updated_edited первое значение меньше этой даты
@@ -203,7 +203,7 @@ else
 			LEFT JOIN (SELECT  GROUP_CONCAT(`md5` separator '|')              as `generic_md5` from `".$dbtable."`        as `g` WHERE `g`.`generic` = '".$md5."' ) as `g`   ON 1=1
 			WHERE `u`.`MD5` = '".$md5."' AND u.`TimeLastModified` BETWEEN   '".$tlm."' AND '2099-01-01 00:00:00'   ORDER BY u.`TimeLastModified` desc LIMIT 1";
 			//echo $sql;
-			if (mysql_num_rows(mysql_query($sql, $con)) == 0)
+			if (mysqli_num_rows(mysqli_query($con, $sql)) == 0)
 			{
 //echo 444444;
 				//4) когда треб дата есть  в descr_edited, и ее нет в updated_edited, тогда берем из updated_edited первое значение больше этой даты
@@ -220,28 +220,24 @@ else
 
 
 
-$result = mysql_query($sql, $con); 
-if( mysql_error() !='') //если есть ошибка, ставился неполный дамп без доп. таблиц, то берем только из updated
-{ 
+$result = mysqli_query($con, $sql); 
+if( mysqli_error() != '') //если есть ошибка, ставился неполный дамп без доп. таблиц, то берем только из updated
+{
 	unset($result); 
 	$sql = "SELECT u.*, '' as `CRC32`, '' as `TTH`, '' as `SHA1`, '' as `eDonkey`, '' as `AICH` FROM `".$dbtable_edited."` as `u` WHERE `u`.`MD5` = '".$md5."'";
 
-	$result = mysql_query($sql, $con);
-
+	$result = mysqli_query($con, $sql);
 }
 
 
 
-if (!$result || mysql_num_rows($result) == 0)
+if (!$result || mysqli_num_rows($result) == 0)
 {
-	die($htmlhead."Error " . mysql_error() . "Cannot proceed or MD5 not found in DB".$htmlfoot);
+	die($htmlhead."Error " . mysqli_error() . "Cannot proceed or MD5 not found in DB".$htmlfoot);
 }
 
 
-//========================
-
-
-$row       = mysql_fetch_assoc($result);
+$row = mysqli_fetch_assoc($result);
 function htmlchars($row){$row = htmlspecialchars($row, ENT_QUOTES, 'UTF-8'); return($row);}
 array_walk($row, 'htmlchars');
 array_walk($row, 'trim');
@@ -657,5 +653,5 @@ echo "
 
 //echo '<br>'.$ads2;
 echo $htmlfoot;
-mysql_close($con);
+mysqli_close($con);
 ?>

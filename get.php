@@ -105,18 +105,18 @@ function translit($str)
 if (!isset($_GET['md5']) || !preg_match('|^[a-fA-F0-9]{32}$|', $_GET['md5']))
 	error_message("Specify an MD5 hash", 404);
 
-if (($con = mysql_connect($dbhost, $dbuser_get, $dbpass_get)) === FALSE)
+if (($con = mysqli_connect($dbhost, $dbuser_get, $dbpass_get)) === FALSE)
 {
-	error_message("Could not connect to the database: " . htmlspecialchars(mysql_error()) . "
+	error_message("Could not connect to the database: " . htmlspecialchars(mysqli_error()) . "
 <br>Cannot proceed.<p><a href=\"http://genofond.org/viewtopic.php?f=3&t=3925\">Please, report the error</a>.", 500);
 }
-mysql_query("SET NAMES utf8");
+mysqli_query($con, "SET NAMES utf8");
 
-if (($result = mysql_select_db($db, $con)) === FALSE)
+if (($result = mysqli_select_db($con, $db)) === FALSE)
 {
-	error_message("Could not select the database: " . htmlspecialchars(mysql_error()) . "<br>Cannot proceed.", 500);
+	error_message("Could not select the database: " . htmlspecialchars(mysqli_error()) . "<br>Cannot proceed.", 500);
 }
-$result = mysql_query(
+$result = mysqli_query($con,
 "SELECT u.Title, u.Author, u.Series, u.Periodical, u.VolumeInfo, u.Publisher, u.Year, u.MD5,
 CASE 
 WHEN `Visible`='ban'
@@ -126,7 +126,7 @@ THEN 'del'
 ELSE 
 CONCAT(u.`ID` - (u.`ID` % 1000), '/', u.`MD5`) 
 END as `Filename`, u.Extension
-FROM `".$dbtable."` u WHERE u.MD5='" . mysql_real_escape_string($_GET['md5']) . "' ", $con);
+FROM `".$dbtable."` u WHERE u.MD5='" . mysqli_real_escape_string($con, $_GET['md5']) . "' ");
 
 //`filename` as `file_exists`, 
 //u.Visible
@@ -134,11 +134,11 @@ FROM `".$dbtable."` u WHERE u.MD5='" . mysql_real_escape_string($_GET['md5']) . 
 
 if (!$result)
 {
-	error_message("Could not query the database: " . htmlspecialchars(mysql_error()). "<br>Cannot proceed.", 500);
+	error_message("Could not query the database: " . htmlspecialchars(mysqli_error()). "<br>Cannot proceed.", 500);
 }
-if (mysql_num_rows($result) == 1)
+if (mysqli_num_rows($result) == 1)
 {
-	$row = mysql_fetch_assoc($result);
+	$row = mysqli_fetch_assoc($result);
 	if ($row['Filename'] == 'del')
 	{
 		error_message("File not found", 404);
@@ -147,8 +147,6 @@ if (mysql_num_rows($result) == 1)
 	{
 		error_message("File is banned", 404);
 	}
-
-	
 }
 else
 {
@@ -156,16 +154,14 @@ else
 }
 
 
-$fullfilename = get_repository_dir($row['Filename']) . '\\' . $row['Filename'];
-$fullfilename = str_replace('/', '\\', $fullfilename);
+$fullfilename = get_repository_dir($row['Filename']) . '/' . $row['Filename'];
 
 if (!file_exists($fullfilename))
 	error_message("File not found! Please, <a href=\"http://genofond.org/viewtopic.php?f=1&t=6423\">report to the administrator</a>.", 404);
 // реальное скачивание
 
-mysql_free_result($result);
-mysql_free_result($res_ads);
-mysql_close($con);
+mysqli_free_result($result);
+mysqli_close($con);
 
 //file_put_contents('get.txt', "\n", FILE_APPEND);
 	//file_put_contents('get_ref.txt', $_SERVER['REQUEST_URI']."\t".$_SERVER["HTTP_X_REAL_IP"]."\n", FILE_APPEND);

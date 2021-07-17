@@ -16,11 +16,12 @@ class RSS
 		global $dbtable,$maxnewslines,$pagesperpage;
 
 		$sql_cnt = "SELECT COUNT(*) FROM $dbtable WHERE Filename!='' AND Generic='' AND Visible='';";
-		$result = mysql_db_query(DB_NAME,$sql_cnt,LINK);
+		mysqli_select_db(LINK, DB_NAME);
+		$result = mysqli_query(LINK,$sql_cnt);
 		if (!$result) die($dberr);
-		$row = mysql_fetch_assoc($result);
+		$row = mysqli_fetch_assoc($result);
 		$count = stripslashes($row['COUNT(*)']);
-		mysql_free_result($result);
+		mysqli_free_result($result);
 
 		$pagestotal = ceil($count/$maxnewslines);
 		if ($pagestotal <= 1) $pagestotal = 1;
@@ -29,7 +30,8 @@ class RSS
 		else $page = 1;
 
 		$query = "SELECT * FROM $dbtable WHERE Filename!='' AND Generic='' AND Visible='' ORDER BY ID DESC LIMIT ".($page-1)*$maxnewslines.",$maxnewslines;";
-		$res = mysql_db_query (DB_NAME, $query, LINK);
+		mysqli_select_db(LINK, DB_NAME)
+		$res = mysqli_query (LINK, $query);
 		$numlines = sizeof($res);
 //   if (false === strpos(strtolower($_SERVER[HTTP_USER_AGENT]),'google')){
       $svrlnk = 'http://'.SERVERNAME.'/news/index.php?page=1';
